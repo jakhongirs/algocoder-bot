@@ -35,6 +35,9 @@ def start_handle(update: Update, context: CallbackContext):
 
 
 def chapter_one_handle(update: Update, context: CallbackContext):
+    global current_algo_index
+    current_algo_index = 0
+
     update.message.reply_text(f"🟢 Name: {chapter_one[current_algo_index]['name']}\n"
                               f"⚙️ Level: {chapter_one[current_algo_index]['level']}\n"
                               f"📄 Topics: {''.join(chapter_one[current_algo_index]['topics'])}\n"
@@ -48,12 +51,13 @@ def next_handle(update: Update, context: CallbackContext):
 
     if len(chapter_one) == current_algo_index:
         current_algo_index -= 1
-
-    update.message.reply_text(f"🟢 Name: {chapter_one[current_algo_index]['name']}\n"
-                              f"⚙️ Level: {chapter_one[current_algo_index]['level']}\n"
-                              f"📄 Topics: {''.join(chapter_one[current_algo_index]['topics'])}\n"
-                              f"🔗 Link: {chapter_one[current_algo_index]['link']}",
-                              reply_markup=submenu_keyboard())
+        update.message.reply_text('Voila! This was the last problem in this chapter.', reply_markup=menu_keyboard())
+    else:
+        update.message.reply_text(f"🟢 Name: {chapter_one[current_algo_index]['name']}\n"
+                                  f"⚙️ Level: {chapter_one[current_algo_index]['level']}\n"
+                                  f"📄 Topics: {''.join(chapter_one[current_algo_index]['topics'])}\n"
+                                  f"🔗 Link: {chapter_one[current_algo_index]['link']}",
+                                  reply_markup=submenu_keyboard())
 
 
 def prev_handle(update: Update, context: CallbackContext):
