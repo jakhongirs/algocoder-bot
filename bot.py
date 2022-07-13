@@ -1,6 +1,6 @@
 from telegram.ext import Updater, CommandHandler, CallbackContext, MessageHandler, Filters
 from telegram import Update, ReplyKeyboardMarkup, KeyboardButton
-from data import chapter_one
+from data import chapter_one, chapter_two
 
 import os
 from dotenv import load_dotenv
@@ -38,10 +38,23 @@ def chapter_one_handle(update: Update, context: CallbackContext):
     global current_algo_index
     current_algo_index = 0
 
-    update.message.reply_text(f"🟢 Name: {chapter_one[current_algo_index]['name']}\n"
+    update.message.reply_text(f"#️⃣ {current_algo_index + 1}\n"
+                              f"🟢 Name: {chapter_one[current_algo_index]['name']}\n"
                               f"⚙️ Level: {chapter_one[current_algo_index]['level']}\n"
-                              f"📄 Topics: {''.join(chapter_one[current_algo_index]['topics'])}\n"
+                              f"📄 Topics: {', '.join(chapter_one[current_algo_index]['topics'])}\n"
                               f"🔗 Link: {chapter_one[current_algo_index]['link']}",
+                              reply_markup=submenu_keyboard())
+
+
+def chapter_two_handle(update: Update, context: CallbackContext):
+    global current_algo_index
+    current_algo_index = 0
+
+    update.message.reply_text(f"#️⃣ {current_algo_index + 1}\n"
+                              f"🟢 Name: {chapter_two[current_algo_index]['name']}\n"
+                              f"⚙️ Level: {chapter_two[current_algo_index]['level']}\n"
+                              f"📄 Topics: {', '.join(chapter_two[current_algo_index]['topics'])}\n"
+                              f"🔗 Link: {chapter_two[current_algo_index]['link']}",
                               reply_markup=submenu_keyboard())
 
 
@@ -53,9 +66,10 @@ def next_handle(update: Update, context: CallbackContext):
         current_algo_index -= 1
         update.message.reply_text('Voila! This was the last problem in this chapter.', reply_markup=menu_keyboard())
     else:
-        update.message.reply_text(f"🟢 Name: {chapter_one[current_algo_index]['name']}\n"
+        update.message.reply_text(f"#️⃣ {current_algo_index + 1}\n"
+                                  f"🟢 Name: {chapter_one[current_algo_index]['name']}\n"
                                   f"⚙️ Level: {chapter_one[current_algo_index]['level']}\n"
-                                  f"📄 Topics: {''.join(chapter_one[current_algo_index]['topics'])}\n"
+                                  f"📄 Topics: {', '.join(chapter_one[current_algo_index]['topics'])}\n"
                                   f"🔗 Link: {chapter_one[current_algo_index]['link']}",
                                   reply_markup=submenu_keyboard())
 
@@ -66,9 +80,10 @@ def prev_handle(update: Update, context: CallbackContext):
     if current_algo_index != 0:
         current_algo_index -= 1
 
-    update.message.reply_text(f"🟢 Name: {chapter_one[current_algo_index]['name']}\n"
+    update.message.reply_text(f"#️⃣ {current_algo_index + 1} \n"
+                              f"🟢 Name: {chapter_one[current_algo_index]['name']}\n"
                               f"⚙️ Level: {chapter_one[current_algo_index]['level']}\n"
-                              f"📄 Topics: {''.join(chapter_one[current_algo_index]['topics'])}\n"
+                              f"📄 Topics: {', '.join(chapter_one[current_algo_index]['topics'])}\n"
                               f"🔗 Link: {chapter_one[current_algo_index]['link']}",
                               reply_markup=submenu_keyboard())
 
@@ -82,6 +97,7 @@ dispatcher = updater.dispatcher
 dispatcher.add_handler(CommandHandler('start', start_handle))
 # dispatcher.add_handler(MessageHandler(Filters.text('Manzil'), location_handle))
 dispatcher.add_handler(MessageHandler(Filters.text('Chapter 1'), chapter_one_handle))
+dispatcher.add_handler(MessageHandler(Filters.text('Chapter 2'), chapter_two_handle))
 dispatcher.add_handler(MessageHandler(Filters.text('Next'), next_handle))
 dispatcher.add_handler(MessageHandler(Filters.text('Previous'), prev_handle))
 dispatcher.add_handler(MessageHandler(Filters.all, start_handle))
