@@ -26,6 +26,8 @@ def submenu_keyboard():
 
 
 def start_handle(update: Update, context: CallbackContext):
+    global current_algo_index
+    current_algo_index = 0
     update.message.reply_text(f'Hello {update.effective_user.first_name}🖖\n\n'
                               f'Welcome to the community of engineers who love algorithms and data structure.\n\n'
                               f'Here below you can see our roadmap to start solving problems ⬇️',
@@ -33,12 +35,38 @@ def start_handle(update: Update, context: CallbackContext):
 
 
 def chapter_one_handle(update: Update, context: CallbackContext):
-    update.message.reply_text(chapter_one[current_algo_index]['link'], reply_markup=submenu_keyboard())
+    update.message.reply_text(f"🟢 Name: {chapter_one[current_algo_index]['name']}\n"
+                              f"⚙️ Level: {chapter_one[current_algo_index]['level']}\n"
+                              f"📄 Topics: {''.join(chapter_one[current_algo_index]['topics'])}\n"
+                              f"🔗 Link: {chapter_one[current_algo_index]['link']}",
+                              reply_markup=submenu_keyboard())
 
 
 def next_handle(update: Update, context: CallbackContext):
+    global current_algo_index
     current_algo_index += 1
-    update.message.reply_text(chapter_one[current_algo_index]['link'], reply_markup=submenu_keyboard())
+
+    if len(chapter_one) == current_algo_index:
+        current_algo_index -= 1
+
+    update.message.reply_text(f"🟢 Name: {chapter_one[current_algo_index]['name']}\n"
+                              f"⚙️ Level: {chapter_one[current_algo_index]['level']}\n"
+                              f"📄 Topics: {''.join(chapter_one[current_algo_index]['topics'])}\n"
+                              f"🔗 Link: {chapter_one[current_algo_index]['link']}",
+                              reply_markup=submenu_keyboard())
+
+
+def prev_handle(update: Update, context: CallbackContext):
+    global current_algo_index
+
+    if current_algo_index != 0:
+        current_algo_index -= 1
+
+    update.message.reply_text(f"🟢 Name: {chapter_one[current_algo_index]['name']}\n"
+                              f"⚙️ Level: {chapter_one[current_algo_index]['level']}\n"
+                              f"📄 Topics: {''.join(chapter_one[current_algo_index]['topics'])}\n"
+                              f"🔗 Link: {chapter_one[current_algo_index]['link']}",
+                              reply_markup=submenu_keyboard())
 
 
 # Sample for context:
@@ -51,6 +79,7 @@ dispatcher.add_handler(CommandHandler('start', start_handle))
 # dispatcher.add_handler(MessageHandler(Filters.text('Manzil'), location_handle))
 dispatcher.add_handler(MessageHandler(Filters.text('Chapter 1'), chapter_one_handle))
 dispatcher.add_handler(MessageHandler(Filters.text('Next'), next_handle))
+dispatcher.add_handler(MessageHandler(Filters.text('Previous'), prev_handle))
 dispatcher.add_handler(MessageHandler(Filters.all, start_handle))
 
 updater.start_polling()
